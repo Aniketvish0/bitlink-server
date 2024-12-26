@@ -5,10 +5,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "type": "module",
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "6bithash": "^1.0.5",
     "express": "^4.21.2",
     "mongoose": "^8.9.0"
   }

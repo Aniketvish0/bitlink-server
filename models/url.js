@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose"
 const URLSchema = new mongoose.Schema({
     shortID: {
         type: String, 
@@ -11,13 +11,8 @@ const URLSchema = new mongoose.Schema({
     },
     visitHistory: [
         {
-            datetime: {
-                type: Date,
-                default: Date.now
-            },
-            counts: {
+            timestamp: {
                 type: Number,
-                default: 0
             },
             ip: {
                 type: String
@@ -30,4 +25,4 @@ const URLSchema = new mongoose.Schema({
 
 const URL = mongoose.model('url', URLSchema);
 
-module.exports = URL; 
+export default URL;
