@@ -1,7 +1,7 @@
-import { Router } from "express";
+import express from "express";
 import { handleredirecturl } from "../controller/redirect.js";
 
-const router = Router();
+const router = express.Router();
 
 router.get("/:shortID", handleredirecturl);
 

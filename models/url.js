@@ -9,12 +9,33 @@ const URLSchema = new mongoose.Schema({
         type: String, 
         required: true
     },
+    userId:
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
+    customAlias: {
+        type: String,
+        required: false,
+        unique: true,
+        sparse: true,
+    },
+    isActive:
+    {
+        type: Boolean,
+        required: true,
+        default: true,
+    },
     visitHistory: [
         {
             timestamp: {
-                type: Number,
+                type: Date,
+                default : Date.now()
             },
             ip: {
+                type: String
+            },
+            userAgent: {
                 type: String
             }
         }

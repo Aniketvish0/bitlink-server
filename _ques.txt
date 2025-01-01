@@ -1,0 +1,2 @@
+why do sessions not work in serverless ?
+statefull vs stateless auth vs sessions ?

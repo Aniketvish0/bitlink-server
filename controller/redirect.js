@@ -1,13 +1,20 @@
 import URL from "../models/url.js";
 export async function handleredirecturl(req, res) {
-    const shortID = req.params.shortID;
-    if (!shortID) {
+    const shortIDorAlias = req.params.shortID;
+    if (!shortIDorAlias) {
         return res.status(400).json({ error: "Please provide a short URL ID." });
     }
     try {
         const entry = await URL.findOneAndUpdate(
-            { shortID: shortID },
-            { $push: { visitHistory: { timestamp: Date.now(), ip: req.ip } } },
+            { $or: [{ shortID : shortIDorAlias }, { customAlias : shortIDorAlias }]} ,
+            { $push: { 
+                visitHistory: { 
+                    timestamp: Date.now(), 
+                    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.ip, 
+                    userAgent : req.headers["user-agent"],
+                }
+              } 
+            },
             { new: true }
         );
         if (!entry) {
