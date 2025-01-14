@@ -5,4 +5,4 @@ router.get("/", (req, res) => {
     res.send("Welcome to Link Shortener API!");
 });
 
-export default Router;
+export default router;
