@@ -16,8 +16,6 @@ const URLSchema = new mongoose.Schema({
     },
     customAlias: {
         type: String,
-        required: false,
-        unique: true,
         sparse: true,
     },
     isActive:
@@ -25,6 +23,11 @@ const URLSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
         default: true,
+    },
+    visitorCount:
+    {
+        type: Number,
+        required: true,
     },
     visitHistory: [
         {
@@ -42,6 +45,11 @@ const URLSchema = new mongoose.Schema({
     ]
 },
 {timestamps: true}
+);
+
+URLSchema.index(
+    { customAlias: 1 },
+    { unique: true, partialFilterExpression: { customAlias: { $exists: true, $ne: null } } }
 );
 
 const URL = mongoose.model('url', URLSchema);

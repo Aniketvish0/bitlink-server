@@ -17,9 +17,11 @@ export async function handleredirecturl(req, res) {
             },
             { new: true }
         );
-        if (!entry) {
-            return res.status(404).json({ error: "Short URL not found." });
+        if (!entry || !entry.isActive) {
+            return res.status(404).json({ error: "Short URL not found or Inactive." });
         }
+        entry.visitorCount += 1;
+        await entry.save();
         res.redirect(entry.redirectURL);
     } catch (error) {
         return res.status(500).json({ error: "Internal Server Error" });

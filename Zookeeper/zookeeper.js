@@ -19,6 +19,7 @@ export async function getZooNumber() {
 }
 
 export async function seedZookeeper() {
+  try{
     const existing = await Zookeeper.findOne();
     if (!existing) {
         const newZookeeper = new Zookeeper({
@@ -32,4 +33,7 @@ export async function seedZookeeper() {
         await newZookeeper.save();
         console.log("Zookeeper seeded with default ranges.");
     }
+    } catch (error) {
+          throw Error("Something wrong in seeding Zookeeper , error" + error);
+    }    
 }
