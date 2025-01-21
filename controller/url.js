@@ -2,15 +2,11 @@ import { generateHash } from "6bithash";
 import { getZooNumber } from "../Zookeeper/zookeeper.js";
 import URL from "../models/url.js";
 import User from "../models/user.js";
-import mongoose from "mongoose";
 async function handleGeneratenewShortURL(req, res) {
     try {
         const {redirectURL , customAlias , isActive} = req.body;
         console.log(customAlias);
         const userid = req.user?._id;
-        if(!userid){
-            return res.status(401).json({error: "access denied , No User Found"});
-        }
         if (!redirectURL) {
             return res.status(400).json({ error: "Please provide a redirect URL." });
         }
@@ -25,9 +21,9 @@ async function handleGeneratenewShortURL(req, res) {
         const url = await URL.create({
             shortID: shortID,
             customAlias : customAlias !== undefined ? customAlias : null,
-            isActive: isActive !== undefined ? isActive : false,
+            isActive: isActive !== undefined ? isActive : true,
             redirectURL: redirectURL,
-            userId: userid,
+            userId: userid ,
             visitorCount: 0,
             visitHistory: [],
         });

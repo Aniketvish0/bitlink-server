@@ -12,7 +12,7 @@ import { authenticateToken , restrictedTo } from "../middlewares/auth.js";
 const router = express.Router();
 
 router.post("/signup", handleusersignup);
-router.post("/login",handleuserlogin);
+router.post("/login", handleuserlogin);
 router.post("/logout",authenticateToken,handleuserlogout);
 router.get("/refreshtoken",authenticateToken ,handlerefreshAccessToken);
 router.patch("/changepassword",authenticateToken, handlechangepassword);
