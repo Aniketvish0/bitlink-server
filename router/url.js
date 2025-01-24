@@ -11,7 +11,7 @@ import { authenticateToken } from "../middlewares/auth.js";
 const router = express.Router();
 
 router.post('/', authenticateToken, handleGeneratenewShortURL);
-router.delete('/delete', authenticateToken, handledeleteurl);
+router.delete('/delete/:shortID', authenticateToken, handledeleteurl);
 router.get('/analytics/:shortID', authenticateToken, handlegetanalytics);
 router.post('/togglestatus',authenticateToken, handletoggleurlstatus);
 router.patch('/update', authenticateToken, handleupdateurl);

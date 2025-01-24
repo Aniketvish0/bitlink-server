@@ -1,4 +1,21 @@
 import mongoose from "mongoose"
+
+const VisitStatsSchema = new mongoose.Schema({
+    totalCount: {
+        type: Number,
+        default: 0,
+        required: true
+    },
+    visitHistory: [{
+        timestamp: {
+            type: Date,
+            default: Date.now
+        },
+        ip: String,
+        userAgent: String
+    }]
+}, { _id: false });
+
 const URLSchema = new mongoose.Schema({
     shortID: {
         type: String, 
@@ -9,8 +26,7 @@ const URLSchema = new mongoose.Schema({
         type: String, 
         required: true
     },
-    userId:
-    {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
@@ -18,39 +34,36 @@ const URLSchema = new mongoose.Schema({
         type: String,
         sparse: true,
     },
-    isActive:
-    {
+    isActive: {
         type: Boolean,
         required: true,
         default: true,
     },
-    visitorCount:
-    {
-        type: Number,
-        required: true,
-    },
-    visitHistory: [
-        {
-            timestamp: {
-                type: Date,
-                default : Date.now()
-            },
-            ip: {
-                type: String
-            },
-            userAgent: {
-                type: String
-            }
+    
+    directVisits: VisitStatsSchema,
+    qrVisits: VisitStatsSchema,
+    
+    qrCode: {
+        imageData: String,
+        lastUpdated: {
+           type: Date,
+           default : Date.now
         }
-    ]
+    }
 },
-{timestamps: true}
-);
+{
+timestamps: true,
+});
+
 
 URLSchema.index(
     { customAlias: 1 },
     { unique: true, partialFilterExpression: { customAlias: { $exists: true, $ne: null } } }
 );
+
+URLSchema.index({ shortID: 1 });
+
+URLSchema.index({ userId: 1, createdAt: -1 });
 
 const URL = mongoose.model('url', URLSchema);
 

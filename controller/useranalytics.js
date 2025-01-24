@@ -7,43 +7,64 @@ const userAnalytics = async(req, res) => {
       if(!userID){
          return res.status(401).json({error: "Access denied, No User Found"});
       }
-        const response = await User.aggregate([
-            {
-                $match:
-                {
-                    _id: userID,
-                }
-            },
-            {
-                $lookup:
-                {
-                    from: "urls",
-                    foreignField: "userId",
-                    localField: "_id",
-                    as: "Url",
-                }
-            },
-            {
-                $addFields: {
-                    totalVisitorCount: { $sum: "$Url.visitorCount" }, // Sum of all visitor counts
-                    totalUrls: { $size: "$Url" } // Count of total URLs
-                }
-            },
-            {
-                $project:
-                {
-                    username: 1,
-                    totalVisitorCount: 1,
-                    totalUrls: 1,
-                    Url: {
-                        shortID: 1,
-                        redirectURL: 1,
-                        visitorCount: 1,
-                        isActive: 1
+      const response = await User.aggregate([
+        {
+            $match: { _id: userID } // Match the user by ID
+        },
+        {
+            $lookup: {
+                from: "urls", // Collection to join
+                foreignField: "userId", // Field in 'urls' collection
+                localField: "_id", // Field in 'users' collection
+                as: "urls", // Alias for the joined data
+            }
+        },
+        {
+            $addFields: {
+                totalVisitorCount: {
+                    $sum: {
+                        $map: {
+                            input: "$urls", // Iterate over the joined 'urls'
+                            as: "url",
+                            in: {
+                                $add: [
+                                    { $ifNull: ["$$url.directVisits.totalCount", 0] }, // Use directVisits.totalCount
+                                    { $ifNull: ["$$url.qrVisits.totalCount", 0] } // Use qrVisits.totalCount
+                                ]
+                            }
+                        }
+                    }
+                },
+                totalUrls: { $size: "$urls" } // Count of total URLs
+            }
+        },
+        {
+            $project: {
+                username: 1,
+                totalVisitorCount: 1,
+                totalUrls: 1,
+                urls: {
+                    $map: {
+                        input: "$urls", // Iterate over the joined 'urls'
+                        as: "url",
+                        in: {
+                            shortID: "$$url.shortID",
+                            redirectURL: "$$url.redirectURL",
+                            visitorCount: {
+                                $add: [
+                                    { $ifNull: ["$$url.directVisits.totalCount", 0] }, // Correctly reference directVisits.totalCount
+                                    { $ifNull: ["$$url.qrVisits.totalCount", 0] } // Correctly reference qrVisits.totalCount
+                                ]
+                            },
+                            isActive: "$$url.isActive"
+                        }
                     }
                 }
             }
-        ]);
+        }
+    ]);
+    
+    
 
         return res.status(200).json({Response : response, Message : "User details fetched successfully"});
     }
