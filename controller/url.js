@@ -123,7 +123,7 @@ async function handletoggleurlstatus(req, res, ) {
 }
 async function handleupdateurl(req, res){
    try{
-        const { shortID }= req.body;
+        const { shortID } = req.body;
         const { redirectURL, isActive, customAlias } = req.body;
         if(!shortID){
             return res.status(400).json({ error: "Please provide a short URL ID." });
