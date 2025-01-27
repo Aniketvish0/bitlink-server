@@ -82,6 +82,7 @@ export async function handleuserlogin(req, res) {
         const options = {
             httpOnly: true,
             secure: true,
+            sameSite: 'none'
         };
         res.cookie("accessToken", accessToken, options);
         res.cookie("refreshToken", refreshToken, options);
@@ -105,6 +106,7 @@ export async function handleuserlogout(req, res) {
         const options = {
             httpOnly: true,
             secure: true,
+            sameSite: 'none'
         };
         res.clearCookie("accessToken", options);
         res.clearCookie("refreshToken", options);
@@ -131,6 +133,7 @@ export async function handlerefreshAccessToken(req, res) {
         const options = {
             httpOnly: true,
             secure: true,
+            sameSite: 'none'
         };
         res.cookie("accessToken", accessToken, options);
         res.cookie("refreshToken", refreshToken, options);
