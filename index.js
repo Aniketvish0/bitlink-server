@@ -33,12 +33,6 @@ app.use(express.urlencoded({extended: true, limit: "16kb"}));
 app.use(express.static("public"));
 app.use(cookieParser());
 
-app.get("/debug-env", (req, res) => {
-  res.send({
-    corsOrigin: process.env.CORS_ORIGIN || "Environment variable not set"
-  });
-});
-
 import staticrouter from "./router/staticrouter.js"; 
 import urlRouter from "./router/url.js";
 import redirectRouter from "./router/redirect.js";
