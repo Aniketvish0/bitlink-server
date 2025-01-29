@@ -33,6 +33,12 @@ app.use(express.urlencoded({extended: true, limit: "16kb"}));
 app.use(express.static("public"));
 app.use(cookieParser());
 
+app.get("/debug-env", (req, res) => {
+  res.send({
+    corsOrigin: process.env.CORS_ORIGIN || "Environment variable not set"
+  });
+});
+
 import staticrouter from "./router/staticrouter.js"; 
 import urlRouter from "./router/url.js";
 import redirectRouter from "./router/redirect.js";
@@ -43,11 +49,7 @@ app.use("/", redirectRouter);
 app.use("/url", urlRouter);
 app.use("/user", userRouter);
 app.use("/user-analytics", analyticsRouter);
-app.get("/debug-env", (req, res) => {
-  res.send({
-    corsOrigin: process.env.CORS_ORIGIN || "Environment variable not set"
-  });
-});
+
 
 connectToDatabase(process.env.MONGO_URI);
 
