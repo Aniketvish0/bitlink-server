@@ -12,7 +12,7 @@ app.use(cors({
   origin: (origin, callback) => {
     const allowedOrigins = [
         "http://localhost:5173", 
-         process.env.CORS_ORIGIN,
+        process.env.CORS_ORIGIN,
     ];
 
     if (!origin || allowedOrigins.includes(origin)) {
@@ -26,6 +26,8 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['set-cookie']
   }));
+console.log("cors origin : " , process.env.CORS_ORIGIN);
+
 app.use(express.json({limit: "16kb"}));
 app.use(express.urlencoded({extended: true, limit: "16kb"}));
 app.use(express.static("public"));
