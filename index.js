@@ -12,7 +12,7 @@ app.use(cors({
   origin: (origin, callback) => {
     const allowedOrigins = [
         "http://localhost:5173", 
-        process.env.CORS_ORIGIN || "https://bitlink-client.vercel.app",
+        "https://bitlink-client.vercel.app",
     ];
     console.log("cors origin : " , process.env.CORS_ORIGIN);
     if (!origin || allowedOrigins.includes(origin)) {
@@ -43,7 +43,11 @@ app.use("/", redirectRouter);
 app.use("/url", urlRouter);
 app.use("/user", userRouter);
 app.use("/user-analytics", analyticsRouter);
-
+app.get("/debug-env", (req, res) => {
+  res.send({
+    corsOrigin: process.env.CORS_ORIGIN || "Environment variable not set"
+  });
+});
 
 connectToDatabase(process.env.MONGO_URI);
 
