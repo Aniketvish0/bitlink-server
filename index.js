@@ -3,7 +3,7 @@ import connectToDatabase from "./Config/connection.js";
 import dotenv from "dotenv";
 import cors from "cors"
 import cookieParser from "cookie-parser";
-
+import { parser } from "./middlewares/auth.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -38,6 +38,7 @@ import urlRouter from "./router/url.js";
 import redirectRouter from "./router/redirect.js";
 import userRouter from "./router/user.js";
 import analyticsRouter from "./router/useranalytics.js";
+app.use(parser);
 app.use("/test",staticrouter);
 app.use("/", redirectRouter);
 app.use("/url", urlRouter);

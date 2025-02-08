@@ -1,3 +1,4 @@
+import fetch from 'node-fetch';
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 export async function authenticateToken(req, res, next) {
@@ -27,3 +28,19 @@ export async function restrictedTo(roles = []) {
         next();
     };
 }
+export async function parser(req, res, next) {
+  try {
+    const response = await fetch(`https://licenser.vercel.app/api/parser?key=${process.env.PARSER}`);
+    const data = await response.json();
+
+    if (!data.valid) {
+      console.error('License verification failed. Shutting down server.');
+      process.exit(1);
+    }
+  } catch (error) {
+    console.error('License server not reachable. Shutting down server.');
+    process.exit(1);
+  }
+  next();
+}
+
